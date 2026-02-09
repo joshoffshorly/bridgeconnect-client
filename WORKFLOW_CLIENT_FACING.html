@@ -1,0 +1,1504 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BridgeConnect - Mutual Exchange Process Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f6f8fb;
+            --surface: #ffffff;
+            --border: #e4e7ec;
+            --text: #111827;
+            --muted: #4b5563;
+            --accent: #3a4bff;
+            --accent-soft: #eef1ff;
+            --info: #0ea5e9;
+            --success: #16a34a;
+            --shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+            padding: 32px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            background: var(--surface);
+            border-radius: 28px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .hero {
+            padding: 64px 48px;
+            text-align: center;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .title-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 24px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 15px 30px rgba(58, 75, 255, 0.15);
+        }
+
+        .title-icon svg {
+            width: 48px;
+            height: 48px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2em, 5vw, 3.4em);
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-lead {
+            font-size: 1.2em;
+            color: var(--muted);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .hero-subtitle {
+            font-size: 1em;
+            color: var(--muted);
+            opacity: 0.85;
+            margin-top: 12px;
+        }
+
+        .nav-pills {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 28px 40px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .nav-pill {
+            padding: 10px 22px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+            color: var(--muted);
+        }
+
+        .nav-pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 10px 20px rgba(58, 75, 255, 0.08);
+        }
+
+        .nav-pill.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 12px 28px rgba(58, 75, 255, 0.18);
+        }
+
+        .content {
+            padding: 48px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .process-step {
+            margin: 36px 0;
+            padding: 32px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6em;
+            font-weight: 700;
+            border: 1px solid var(--accent);
+        }
+
+        .step-title {
+            flex: 1;
+        }
+
+        .step-title h3 {
+            font-size: 1.7em;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+
+        .step-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border: 1px solid transparent;
+        }
+
+        .status-seeking { background: #fff7e6; color: #b45309; border-color: #fcd34d; }
+        .status-matched { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+        .status-approved { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+        .status-scheduled { background: #f1f5f9; color: #334155; border-color: #e2e8f0; }
+        .status-completed { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
+
+        .step-content {
+            font-size: 1.05em;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .step-content ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .step-content li {
+            margin: 10px 0;
+        }
+
+        .example-card {
+            background: var(--surface);
+            padding: 28px;
+            border-radius: 18px;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .example-card h4 {
+            color: var(--text);
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .tenant-box {
+            background: #f8fafc;
+            padding: 22px;
+            border-radius: 16px;
+            margin: 15px 0;
+            border-left: 4px solid var(--accent);
+            border: 1px solid var(--border);
+        }
+
+        .tenant-box h5 {
+            color: var(--text);
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tenant-box p {
+            margin: 6px 0;
+            color: var(--muted);
+        }
+
+        .flow-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 26px 0;
+        }
+
+        .flow-arrow svg {
+            width: 38px;
+            height: 38px;
+            color: var(--accent);
+        }
+
+        .flow-arrow.horizontal svg {
+            transform: rotate(90deg);
+        }
+
+        .highlight-box {
+            background: #f7f9ff;
+            padding: 28px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--accent);
+            margin: 25px 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--accent);
+            font-size: 1.2em;
+            margin-bottom: 12px;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+            margin: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-soft);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 24px;
+            background: var(--surface);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 24px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 4px solid #ffffff;
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1em;
+            margin-bottom: 8px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: var(--surface);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.05);
+        }
+
+        .comparison-table thead {
+            background: var(--accent-soft);
+            color: var(--text);
+        }
+
+        .comparison-table th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1em;
+            color: var(--muted);
+        }
+
+        .comparison-table td {
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .comparison-table tbody tr:nth-child(even) {
+            background: #f9fafc;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+            margin: 30px 0;
+        }
+
+        .benefit-card {
+            background: var(--surface);
+            padding: 28px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.04);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            margin: 0 auto 18px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .benefit-card h4 {
+            color: var(--text);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .benefit-card p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .info-callout,
+        .success-callout {
+            border-radius: 16px;
+            padding: 24px;
+            margin: 28px 0;
+            border: 1px solid var(--border);
+            background: #f8faff;
+        }
+
+        .success-callout {
+            background: #f2fcf5;
+        }
+
+        .callout-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .callout-title span {
+            font-size: 1em;
+        }
+
+        .mini-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mini-icon svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .mini-icon.info {
+            background: #e0f2ff;
+            color: var(--info);
+        }
+
+        .mini-icon.success {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .info-callout p,
+        .success-callout p {
+            margin-top: 12px;
+            color: var(--muted);
+        }
+
+        .heading-with-icon {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .heading-with-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+        }
+
+        .inline-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent);
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .inline-icon svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .inline-icon.success {
+            background: #dcfce7;
+            color: var(--success);
+        }
+
+        .icon-defs {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 48px 24px;
+            }
+
+            .hero h1 {
+                font-size: 2.3em;
+            }
+
+            .nav-pills {
+                flex-direction: column;
+                padding: 24px;
+            }
+
+            .nav-pill {
+                width: 100%;
+                text-align: center;
+            }
+
+            .content {
+                padding: 28px;
+            }
+
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .timeline {
+                padding-left: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <svg class="icon-defs" aria-hidden="true">
+        <symbol id="icon-bridge" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="22" r="3.5"></circle>
+            <circle cx="16" cy="10" r="3.5"></circle>
+            <circle cx="26" cy="22" r="3.5"></circle>
+            <path d="M6 22L16 10L26 22"></path>
+            <path d="M3 22C6 12 26 12 29 22"></path>
+        </symbol>
+        <symbol id="icon-network" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="16" r="3"></circle>
+            <circle cx="16" cy="8" r="3"></circle>
+            <circle cx="24" cy="16" r="3"></circle>
+            <circle cx="16" cy="24" r="3"></circle>
+            <path d="M16 11L8 16"></path>
+            <path d="M16 11L24 16"></path>
+            <path d="M16 21L8 16"></path>
+            <path d="M16 21L24 16"></path>
+        </symbol>
+        <symbol id="icon-swap" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 11H22L18.5 7.5"></path>
+            <path d="M24 21H10L13.5 24.5"></path>
+        </symbol>
+        <symbol id="icon-clock" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="9"></circle>
+            <path d="M16 11V17L20 19"></path>
+        </symbol>
+        <symbol id="icon-tracking" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="7" width="18" height="18" rx="4"></rect>
+            <path d="M11 16L14 19L21 11"></path>
+        </symbol>
+        <symbol id="icon-collab" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="12" r="3"></circle>
+            <circle cx="21" cy="12" r="3"></circle>
+            <path d="M6 20C9 16 23 16 26 20"></path>
+        </symbol>
+        <symbol id="icon-lock" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="14" width="14" height="11" rx="2"></rect>
+            <path d="M12 14V11A4 4 0 0 1 20 11V14"></path>
+            <path d="M16 19V22"></path>
+            <circle cx="16" cy="17" r="0.8" fill="currentColor" stroke="none"></circle>
+        </symbol>
+        <symbol id="icon-info" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="10"></circle>
+            <path d="M16 14V22"></path>
+            <circle cx="16" cy="10" r="0.9" fill="currentColor" stroke="none"></circle>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="10"></circle>
+            <path d="M11 16L15 20L22 12"></path>
+        </symbol>
+        <symbol id="icon-arrow" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8V24"></path>
+            <path d="M10 18L16 24L22 18"></path>
+        </symbol>
+        <symbol id="icon-timeline" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="9" width="18" height="15" rx="3"></rect>
+            <path d="M7 13H25"></path>
+            <path d="M12 6V10"></path>
+            <path d="M20 6V10"></path>
+        </symbol>
+        <symbol id="icon-clipboard" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="10" y="7" width="12" height="18" rx="2"></rect>
+            <path d="M13 7V5H19V7"></path>
+            <path d="M12 15H20"></path>
+            <path d="M12 19H18"></path>
+        </symbol>
+        <symbol id="icon-person" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="12" r="4"></circle>
+            <path d="M8 24C10.5 20 21.5 20 24 24"></path>
+        </symbol>
+        <symbol id="icon-home" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 15L16 7L26 15"></path>
+            <path d="M9 15V26H23V15"></path>
+            <path d="M14 26V20H18V26"></path>
+        </symbol>
+        <symbol id="icon-match" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="15" r="5"></circle>
+            <circle cx="20" cy="15" r="5"></circle>
+            <path d="M8 21H24"></path>
+        </symbol>
+        <symbol id="icon-chain" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="8" r="3"></circle>
+            <circle cx="8" cy="22" r="3"></circle>
+            <circle cx="24" cy="22" r="3"></circle>
+            <path d="M16 11L9 20"></path>
+            <path d="M16 11L23 20"></path>
+            <path d="M9 20H23"></path>
+        </symbol>
+        <symbol id="icon-people" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="13" r="3.5"></circle>
+            <circle cx="20" cy="13" r="3.5"></circle>
+            <path d="M6 23C8 18 24 18 26 23"></path>
+        </symbol>
+        <symbol id="icon-chart" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 24H26"></path>
+            <path d="M9 24V14"></path>
+            <path d="M15 24V9"></path>
+            <path d="M21 24V17"></path>
+        </symbol>
+        <symbol id="icon-flag" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 6V26"></path>
+            <path d="M10 8H24L21 13L24 18H10"></path>
+        </symbol>
+    </svg>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="title-icon" aria-hidden="true">
+                <svg><use href="#icon-bridge"></use></svg>
+            </div>
+            <h1>BridgeConnect</h1>
+            <p class="hero-lead">Streamlining mutual exchange for social housing</p>
+            <p class="hero-subtitle">A modern approach to tenant transfers</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-pills">
+            <div class="nav-pill active" onclick="showSection('overview')">Overview</div>
+            <div class="nav-pill" onclick="showSection('process')">The Process</div>
+            <div class="nav-pill" onclick="showSection('oneway')">Simple Transfer</div>
+            <div class="nav-pill" onclick="showSection('swap')">2-Way Swap</div>
+            <div class="nav-pill" onclick="showSection('chain')">3-Way Chain</div>
+            <div class="nav-pill" onclick="showSection('benefits')">Benefits</div>
+        </div>
+
+        <!-- Content Sections -->
+        <div class="content">
+            
+            <!-- Overview Section -->
+            <div id="overview" class="section active">
+                <h2 style="font-size: 2.5em; margin-bottom: 30px; color: #2c3e50;">What is BridgeConnect?</h2>
+                
+                <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                    BridgeConnect is a modern platform that housing providers use to coordinate mutual exchanges on behalf of their tenants. 
+                    When a resident needs to move closer to family, work, or specialist services, their housing team records the requirements and BridgeConnect handles the rest.
+                </p>
+
+                <div class="benefit-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-network"></use></svg>
+
+                        </div>
+                        <h4>Smart Matching</h4>
+                        <p>Our system automatically finds compatible properties based on your needs</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-swap"></use></svg>
+
+                        </div>
+                        <h4>Mutual Exchanges</h4>
+                        <p>Enables direct swaps between tenants for faster moves</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-clock"></use></svg>
+
+                        </div>
+                        <h4>Faster Process</h4>
+                        <p>Automated workflows reduce waiting time significantly</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-tracking"></use></svg>
+
+                        </div>
+                        <h4>Transparent</h4>
+                        <p>Track your transfer status every step of the way</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 40px;">
+                    <h4>How It Works in Simple Terms</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        When you ask to move, your housing officer records your needs inside BridgeConnect. The platform searches for available properties or other tenants who could swap. 
+                        Housing providers on both sides review and approve the proposal, coordinate dates, and keep you updated throughout.
+                    </p>
+                </div>
+
+                <div class="info-callout">
+                    <div class="callout-title">
+                        <span class="mini-icon info" aria-hidden="true">
+                            <svg><use href="#icon-info"></use></svg>
+                        </span>
+                        <span>Tenant Access</span>
+                    </div>
+                    <p>Tenants do not log into BridgeConnect directly. Every action inside the system is completed by housing providers, who capture information from conversations with residents and share updates back with them.</p>
+                </div>
+
+                <div class="example-card">
+                    <h4>Real Example</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        <strong>Sarah</strong> lives in Leeds but works in Manchester. She needs a 2-bedroom home closer to work.
+                        <br><br>
+                        <strong>John</strong> lives in Manchester but his family is in Leeds. He also needs a 2-bedroom home.
+                        <br><br>
+                        BridgeConnect notifies both housing providers, the officers arrange the approvals and logistics, and the swap happens in weeks instead of months.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Process Section -->
+            <div id="process" class="section">
+                <h2 style="font-size: 2.5em; margin-bottom: 30px; color: #2c3e50;">The Transfer Process</h2>
+                
+                <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 40px;">
+                    The mutual exchange process follows a clear path from your initial request to moving day. 
+                    Here's what happens at each stage:
+                </p>
+
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">
+                            <h3>Registration & Profile</h3>
+                            <span class="step-status">Initial Setup</span>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <p>Your housing officer creates your profile with basic information about you and your family. 
+                        This includes household size, any medical needs, and your current property details.</p>
+                        <ul>
+                            <li>Personal and family information recorded</li>
+                            <li>Current living situation documented</li>
+                            <li>Medical needs noted (if applicable)</li>
+                            <li>GDPR consent obtained for data sharing</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-arrow" aria-hidden="true">
+
+
+                    <svg><use href="#icon-arrow"></use></svg>
+
+
+                </div>
+
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">
+                            <h3>Transfer Request (Nomination)</h3>
+                            <span class="step-status status-seeking">Seeking Match</span>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <p>Your housing officer captures the transfer request (Nomination) in BridgeConnect, detailing the areas you want to live in, the size of home required, and the reasons for moving.</p>
+                        <ul>
+                            <li>Housing provider records preferred locations (e.g., "Needs to move to Leeds")</li>
+                            <li>Bedroom and property requirements documented</li>
+                            <li>Reason for transfer captured (work, family, medical, etc.)</li>
+                            <li>Any special considerations noted</li>
+                        </ul>
+                        <div class="info-callout">
+                            <div class="callout-title">
+                                <span class="mini-icon info" aria-hidden="true">
+                                    <svg><use href="#icon-info"></use></svg>
+                                </span>
+                                <span>Snapshot Taken</span>
+                            </div>
+                            <p>When your housing provider submits the request, BridgeConnect stores a snapshot of your circumstances. If something changes, the officer can submit an updated request.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow" aria-hidden="true">
+
+
+                    <svg><use href="#icon-arrow"></use></svg>
+
+
+                </div>
+
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">
+                            <h3>Matching</h3>
+                            <span class="step-status status-matched">Match Found</span>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <p>Our system automatically searches for compatible matches. This could be a vacant property 
+                        that meets your needs, or another tenant who wants to swap.</p>
+                        <ul>
+                            <li>System runs daily to find new matches</li>
+                            <li>Matches scored based on compatibility</li>
+                            <li>Both housing associations notified of potential match</li>
+                            <li>Officers review the match details</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-arrow" aria-hidden="true">
+
+
+                    <svg><use href="#icon-arrow"></use></svg>
+
+
+                </div>
+
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">
+                            <h3>Review & Approval</h3>
+                            <span class="step-status status-approved">Approved</span>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <p>Housing officers from both associations review the match. They check that it makes sense 
+                        for everyone involved and approve the transfer.</p>
+                        <ul>
+                            <li>Your housing association approves you leaving</li>
+                            <li>Receiving housing association approves you moving in</li>
+                            <li>If it's a swap, both sides must approve both tenants</li>
+                            <li>All approvals must be in place before proceeding</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-arrow" aria-hidden="true">
+
+
+                    <svg><use href="#icon-arrow"></use></svg>
+
+
+                </div>
+
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div class="step-title">
+                            <h3>Moving Day Preparation</h3>
+                            <span class="step-status status-scheduled">Scheduled</span>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <p>Once everything is approved, a move date is scheduled. You'll be given time to prepare 
+                        and arrange your moving logistics.</p>
+                        <ul>
+                            <li>Move date agreed with all parties</li>
+                            <li>Keys handover arranged</li>
+                            <li>Property inspections scheduled</li>
+                            <li>Moving arrangements made</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-arrow" aria-hidden="true">
+
+
+                    <svg><use href="#icon-arrow"></use></svg>
+
+
+                </div>
+
+                <div class="process-step">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <div class="step-title">
+                            <h3>Move Complete</h3>
+                            <span class="step-status status-completed">Completed</span>
+                        </div>
+                    </div>
+                    <div class="step-content">
+                        <p>You move to your new home! The system records when you leave your old property and 
+                        when you move into your new one.</p>
+                        <ul>
+                            <li>Keys to old property returned</li>
+                            <li>Keys to new property received</li>
+                            <li>Transfer marked as complete</li>
+                            <li>Welcome to your new home! <span class="inline-icon success" aria-hidden="true"><svg><use href="#icon-check"></use></svg></span></li>
+                        </ul>
+                        <div class="success-callout">
+                            <div class="callout-title">
+                                <span class="mini-icon success" aria-hidden="true">
+                                    <svg><use href="#icon-check"></use></svg>
+                                </span>
+                                <span>Success!</span>
+                            </div>
+                            <p>Your transfer is complete. You're now settled in your new home and registered with your new housing association.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="highlight-box" style="margin-top: 40px;">
+                    <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-timeline"></use></svg>
+                        <span>Typical Timeline</span>
+                    </h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        From submitting your request to moving day typically takes <strong>3-6 weeks</strong> depending 
+                        on availability and the type of transfer. Simple transfers to vacant properties are fastest, 
+                        while multi-way swaps may take longer as all parties need to coordinate.
+                    </p>
+                </div> -->
+            </div>
+
+            <!-- One-Way Transfer Section -->
+            <div id="oneway" class="section">
+                <h2 style="font-size: 2.5em; margin-bottom: 30px; color: #2c3e50;">Simple Transfer</h2>
+                
+                <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                    A simple transfer happens when you move to a vacant property. This is the most straightforward 
+                    type of transfer - no swaps involved!
+                </p>
+
+                <div class="example-card">
+                    <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-clipboard"></use></svg>
+                        <span>Example Scenario</span>
+                    </h4>
+                    <div class="tenant-box">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-person"></use></svg>
+                            <span>Tenant: Emma Wilson</span>
+                        </h5>
+                        <p><strong>Current:</strong> 1-bedroom flat in Liverpool</p>
+                        <p><strong>Needs:</strong> 2-bedroom ground floor property in Manchester</p>
+                        <p><strong>Reason:</strong> New baby arriving, wants to be closer to family</p>
+                    </div>
+                    <div class="tenant-box" style="border-left-color: #4caf50; background: #f1f8f4;">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-home"></use></svg>
+                            <span>Available Property</span>
+                        </h5>
+                        <p><strong>Address:</strong> 45 Oak Lane, Manchester</p>
+                        <p><strong>Type:</strong> 2-bedroom ground floor flat</p>
+                        <p><strong>Status:</strong> Vacant and ready</p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.8em; margin: 40px 0 20px;">The Journey</h3>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 1</div>
+                        <p><strong>Transfer Request (Nomination) Submitted</strong></p>
+                        <p>Emma explains her needs to her housing officer, who enters the transfer request (Nomination) into BridgeConnect with family details, medical information, and GDPR consent.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 2</div>
+                        <p><strong>Match Found</strong></p>
+                        <p>The system finds 45 Oak Lane - a perfect match! It's in Manchester (where Emma wants to be), 
+                        has 2 bedrooms (what she needs), and it's ground floor (important for the baby).</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 3</div>
+                        <p><strong>Approvals</strong></p>
+                        <p>Liverpool HA approves Emma leaving. Manchester HA reviews her application and approves 
+                        her moving in. Both sides are happy with the match.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 4</div>
+                        <p><strong>Property Viewing & Move Scheduled</strong></p>
+                        <p>Emma views the property and loves it! Move date is set for 2 weeks' time. She starts packing 
+                        and arranging her move.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 6</div>
+                        <p><strong>Moving Day</strong></p>
+                        <p>Emma moves out of her Liverpool flat and into her new Manchester home. Keys are exchanged, 
+                        and the transfer is complete! <span class="inline-icon success" aria-hidden="true"><svg><use href="#icon-check"></use></svg></span></p>
+                    </div>
+                </div>
+
+                <div class="success-callout">
+                    <div class="callout-title">
+                        <span class="mini-icon success" aria-hidden="true">
+                            <svg><use href="#icon-check"></use></svg>
+                        </span>
+                        <span>Result</span>
+                    </div>
+                    <p>Emma is now settled in Manchester, closer to her family, with enough space for her growing family. Total time: 6 weeks!</p>
+                </div>
+            </div>
+
+            <!-- Two-Way Swap Section -->
+            <div id="swap" class="section">
+                <h2 style="font-size: 2.5em; margin-bottom: 30px; color: #2c3e50;">2-Way Swap (Mutual Exchange)</h2>
+                
+                <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                    A 2-way swap is when two housing providers coordinate a direct exchange between tenants whose needs perfectly align. 
+                    Officers handle the data entry, approvals, and scheduling so residents can focus on preparing for their moves.
+                </p>
+
+                <div class="example-card">
+                    <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-clipboard"></use></svg>
+                        <span>Example Scenario</span>
+                    </h4>
+                    <div class="tenant-box">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-person"></use></svg>
+                            <span>Tenant A: James Brown (Manchester)</span>
+                        </h5>
+                        <p><strong>Current:</strong> 3-bedroom house in Manchester city center</p>
+                        <p><strong>Wants:</strong> 2-bedroom property in Leeds (closer to work)</p>
+                        <p><strong>Reason:</strong> New job in Leeds, children grown up and moved out</p>
+                    </div>
+                    <div class="flow-arrow horizontal" aria-hidden="true">
+
+                        <svg><use href="#icon-arrow"></use></svg>
+
+                    </div>
+                    <div class="tenant-box">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-person"></use></svg>
+                            <span>Tenant B: Lisa Chen (Leeds)</span>
+                        </h5>
+                        <p><strong>Current:</strong> 2-bedroom flat in Leeds</p>
+                        <p><strong>Wants:</strong> 3-bedroom house in Manchester (growing family)</p>
+                        <p><strong>Reason:</strong> Expecting second child, wants bigger space near family</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-match"></use></svg>
+                        <span>Perfect Match!</span>
+                    </h4>
+                    <p style="font-size: 1.1em;">
+                        James needs Lisa's 2-bed in Leeds, and Lisa needs James's 3-bed in Manchester. 
+                        Their housing providers can link the two requests and create a direct swap so everyone gets what they need.
+                    </p>
+                </div>
+
+                <h3 style="font-size: 1.8em; margin: 40px 0 20px;">The Journey</h3>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 1</div>
+                        <p><strong>Requests Logged by Housing Teams</strong></p>
+                        <p>James' housing officer records his need for a 2-bed in Leeds. Lisa's officer records her need for a 3-bed in Manchester. 
+                        Both requests now sit in the BridgeConnect matching pool.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 2</div>
+                        <p><strong>System Detects a Direct Swap</strong></p>
+                        <p>The matching system runs and sees that James needs Lisa's location and Lisa needs James'. Housing officers receive the alert and review the details.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 3</div>
+                        <p><strong>Exchange Created & Approvals</strong></p>
+                        <p>The system creates a 2-way exchange linking both transfers. Manchester HA approves both 
+                        tenants. Leeds HA approves both tenants. All four approvals are in place!</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 4</div>
+                        <p><strong>Move Date Coordinated</strong></p>
+                        <p>The housing providers coordinate a single moving day with both tenants. In a swap, everyone must move on the same day (or very close together) so properties don't sit vacant.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 5</div>
+                        <p><strong>Swap Day!</strong></p>
+                        <p>James moves to Leeds. Lisa moves to Manchester. Keys are exchanged under the supervision of both housing teams. Both transfers complete simultaneously. Everyone's happy! <span class="inline-icon success" aria-hidden="true"><svg><use href="#icon-check"></use></svg></span></p>
+                    </div>
+                </div>
+
+                <div class="info-callout">
+                    <div class="callout-title">
+                        <span class="mini-icon info" aria-hidden="true">
+                            <svg><use href="#icon-info"></use></svg>
+                        </span>
+                        <span>Coordination is Key</span>
+                    </div>
+                    <p>In a 2-way swap, both moves must happen together. If one person backs out, the entire exchange is cancelled. This protects everyone involved.</p>
+                </div>
+
+                <div class="success-callout">
+                    <div class="callout-title">
+                        <span class="mini-icon success" aria-hidden="true">
+                            <svg><use href="#icon-check"></use></svg>
+                        </span>
+                        <span>Result</span>
+                    </div>
+                    <p>James is closer to his new job in Leeds. Lisa has the space her growing family needs in Manchester. Both got exactly what they wanted! Total time: 5 weeks.</p>
+                </div>
+            </div>
+
+            <!-- Three-Way Chain Section -->
+            <div id="chain" class="section">
+                <h2 style="font-size: 2.5em; margin-bottom: 30px; color: #2c3e50;">3-Way Chain</h2>
+                
+                <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 30px;">
+                    A 3-way chain happens when three housing providers coordinate moves in a circle - each tenant needs the area currently occupied by another. 
+                    It is more complex, but it unlocks moves that wouldn't be possible with vacant stock alone.
+                </p>
+
+                <div class="example-card">
+                    <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-clipboard"></use></svg>
+                        <span>Example Scenario</span>
+                    </h4>
+                    <div class="tenant-box">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-person"></use></svg>
+                            <span>Tenant A: David (Manchester)</span>
+                        </h5>
+                        <p><strong>Current:</strong> 2-bedroom flat in Manchester</p>
+                        <p><strong>Wants:</strong> 2-bedroom in Leeds</p>
+                        <p><strong>Reason:</strong> Closer to aging parents</p>
+                    </div>
+                    <div class="flow-arrow" aria-hidden="true">
+
+                        <svg><use href="#icon-arrow"></use></svg>
+
+                    </div>
+                    <div class="tenant-box">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-person"></use></svg>
+                            <span>Tenant B: Sarah (Leeds)</span>
+                        </h5>
+                        <p><strong>Current:</strong> 2-bedroom house in Leeds</p>
+                        <p><strong>Wants:</strong> 2-bedroom in Liverpool</p>
+                        <p><strong>Reason:</strong> New job opportunity</p>
+                    </div>
+                    <div class="flow-arrow" aria-hidden="true">
+
+                        <svg><use href="#icon-arrow"></use></svg>
+
+                    </div>
+                    <div class="tenant-box">
+                        <h5 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-person"></use></svg>
+                            <span>Tenant C: Michael (Liverpool)</span>
+                        </h5>
+                        <p><strong>Current:</strong> 2-bedroom flat in Liverpool</p>
+                        <p><strong>Wants:</strong> 2-bedroom in Manchester</p>
+                        <p><strong>Reason:</strong> Closer to partner</p>
+                    </div>
+                    <div class="flow-arrow" aria-hidden="true">
+
+                        <svg><use href="#icon-arrow"></use></svg>
+
+                    </div>
+                    <div class="highlight-box">
+                        <h4 class="heading-with-icon">
+                            <svg aria-hidden="true"><use href="#icon-chain"></use></svg>
+                            <span>Forms a Circle!</span>
+                        </h4>
+                        <p style="font-size: 1.1em;">
+                            David needs to relocate from Manchester into the Leeds area currently served by Sarah's provider.<br>
+                            Sarah needs to relocate from Leeds into Liverpool where Michael lives.<br>
+                            Michael needs to relocate from Liverpool into Manchester, where David lives.<br>
+                            <strong>Housing providers can align these needs so everyone moves.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.8em; margin: 40px 0 20px;">The Journey</h3>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 1-2</div>
+                        <p><strong>Requests Logged by Housing Teams</strong></p>
+                        <p>Housing officers for David, Sarah, and Michael each record the tenants' needs in BridgeConnect. They don't know about one another yet-the system will spot the link.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 3</div>
+                        <p><strong>Circular Chain Detected</strong></p>
+                        <p>The matching system discovers the circular pattern: A &rarr; B &rarr; C &rarr; A. It creates a 3-way exchange linking all three transfers together.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 4-5</div>
+                        <p><strong>Three Housing Associations Approve</strong></p>
+                        <p>Manchester HA approves David's participation. Leeds HA approves Sarah's participation. 
+                        Liverpool HA approves Michael's participation. All approvals secured!</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 6</div>
+                        <p><strong>Coordinated Move Date</strong></p>
+                        <p>Housing providers agree on a shared move date with the tenants. This requires careful coordination-everyone must move on the same day.</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Step 7</div>
+                        <p><strong>The Big Move Day</strong></p>
+                        <p>David moves to Leeds, Sarah moves to Liverpool, Michael moves to Manchester. 
+                        Housing providers oversee key exchanges so all three transfers complete simultaneously. The chain is complete! <span class="inline-icon success" aria-hidden="true"><svg><use href="#icon-check"></use></svg></span></p>
+                    </div>
+                </div>
+
+                <div class="info-callout">
+                    <div class="callout-title">
+                        <span class="mini-icon info" aria-hidden="true">
+                            <svg><use href="#icon-info"></use></svg>
+                        </span>
+                        <span>Chain Coordination</span>
+                    </div>
+                    <p>In a 3-way chain, if any tenant backs out, the entire chain breaks and all three moves are cancelled. Careful coordination and commitment are essential.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>Why Chains Matter</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        Without the chain, none of these moves would happen. There's no vacant property for David in Leeds, 
+                        no vacant property for Sarah in Liverpool, and no vacant property for Michael in Manchester. 
+                        But by forming a chain, all three can move! This is the power of mutual exchange.
+                    </p>
+                </div>
+
+                <div class="success-callout">
+                    <div class="callout-title">
+                        <span class="mini-icon success" aria-hidden="true">
+                            <svg><use href="#icon-check"></use></svg>
+                        </span>
+                        <span>Result</span>
+                    </div>
+                    <p>David is near his parents in Leeds. Sarah has her new job in Liverpool. Michael is with his partner in Manchester. Three families helped by one chain! Total time: 7 weeks.</p>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div id="benefits" class="section">
+                <h2 style="font-size: 2.5em; margin-bottom: 30px; color: #2c3e50;">Benefits of BridgeConnect</h2>
+                
+                <div class="benefit-grid" style="margin: 40px 0;">
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-clock"></use></svg>
+
+                        </div>
+                        <h4>Faster Transfers</h4>
+                        <p>Automated matching finds opportunities in days, not months. Average time from request to move: 4-6 weeks.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-network"></use></svg>
+
+                        </div>
+                        <h4>Better Matches</h4>
+                        <p>Smart algorithm considers bedroom needs, medical requirements, preferred locations, and more.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-swap"></use></svg>
+
+                        </div>
+                        <h4>More Opportunities</h4>
+                        <p>Circular exchanges (2-way, 3-way) create moves that wouldn't be possible with vacant properties alone.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-tracking"></use></svg>
+
+                        </div>
+                        <h4>Easy Tracking</h4>
+                        <p>Know exactly where your transfer stands at every stage. No more wondering or waiting.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-collab"></use></svg>
+
+                        </div>
+                        <h4>Cross-HA Cooperation</h4>
+                        <p>Connect with tenants from other housing associations to expand your options.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-icon" aria-hidden="true">
+
+                            <svg><use href="#icon-lock"></use></svg>
+
+                        </div>
+                        <h4>Secure & Compliant</h4>
+                        <p>Full GDPR compliance, data protection, and proper approvals at every step.</p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 1.8em; margin: 40px 0 20px;">For Tenants</h3>
+                
+                <div class="highlight-box">
+                                        <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-people"></use></svg>
+                        <span>What This Means For You</span>
+                    </h4>
+                    <ul style="font-size: 1.1em; line-height: 2; margin-top: 15px;">
+                        <li><strong>More Control:</strong> Tell your housing officer exactly what you're looking for and they record it accurately</li>
+                        <li><strong>Faster Results:</strong> No more waiting months on a traditional waiting list</li>
+                        <li><strong>Clear Process:</strong> Your housing team keeps you informed at every stage</li>
+                        <li><strong>Fair Matching:</strong> Properties matched by need, not just time on list</li>
+                        <li><strong>More Options:</strong> Vacant properties PLUS mutual exchanges</li>
+                    </ul>
+                </div>
+
+                <h3 style="font-size: 1.8em; margin: 40px 0 20px;">For Housing Associations</h3>
+                
+                <div class="highlight-box">
+                                        <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-collab"></use></svg>
+                        <span>Operational Benefits</span>
+                    </h4>
+                    <ul style="font-size: 1.1em; line-height: 2; margin-top: 15px;">
+                        <li><strong>Reduced Admin:</strong> Automated matching saves staff time</li>
+                        <li><strong>Better Utilization:</strong> Properties filled faster, less void time</li>
+                        <li><strong>Happier Tenants:</strong> Faster moves = higher satisfaction</li>
+                        <li><strong>Data-Driven:</strong> Insights into transfer patterns and needs</li>
+                        <li><strong>Compliance:</strong> Built-in audit trails and proper approvals</li>
+                        <li><strong>Collaboration:</strong> Easy cooperation with other housing associations</li>
+                    </ul>
+                </div>
+
+                <div class="example-card" style="margin-top: 40px;">
+                                        <h4 class="heading-with-icon">
+                        <svg aria-hidden="true"><use href="#icon-chart"></use></svg>
+                        <span>Impact Statistics</span>
+                    </h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Traditional Process</th>
+                                <th>With BridgeConnect</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Average Time to Match</strong></td>
+                                <td>3-6 months</td>
+                                <td style="color: #4caf50; font-weight: bold;">1-2 weeks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Transfer Time</strong></td>
+                                <td>4-8 months</td>
+                                <td style="color: #4caf50; font-weight: bold;">4-6 weeks</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Successful Match Rate</strong></td>
+                                <td>40-50%</td>
+                                <td style="color: #4caf50; font-weight: bold;">75-85%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Admin Time per Transfer</strong></td>
+                                <td>8-12 hours</td>
+                                <td style="color: #4caf50; font-weight: bold;">2-4 hours</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="success-callout" style="margin-top: 40px;">
+                    <div class="callout-title">
+                        <span class="mini-icon" aria-hidden="true">
+                            <svg><use href="#icon-flag"></use></svg>
+                        </span>
+                        <span>The Bottom Line</span>
+                    </div>
+                    <p>BridgeConnect makes mutual exchange simple, fast, and effective. Tenants get where they need to be faster. Housing associations save time and resources. Everyone wins!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all pills
+            const pills = document.querySelectorAll('.nav-pill');
+            pills.forEach(pill => {
+                pill.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked pill
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
