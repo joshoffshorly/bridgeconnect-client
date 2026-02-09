@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BridgeConnect V2 - Transfer Workflow Documentation</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f6f8fb;
+            --surface: #ffffff;
+            --muted-surface: #f3f5f9;
+            --border: #e4e7ec;
+            --text: #111827;
+            --muted: #4b5563;
+            --accent: #3949ff;
+            --accent-soft: #eef1ff;
+            --info: #0284c7;
+            --success: #16a34a;
+            --warning: #f97316;
+            --shadow: 0 18px 40px rgba(14, 23, 38, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 72px;
+        }
+
+        .header {
+            background: var(--surface);
+            border-radius: 28px;
+            padding: 48px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .title-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 24px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .title-icon svg {
+            width: 42px;
+            height: 42px;
+        }
+
+        .header h1 {
+            font-size: clamp(2.2em, 4vw, 3.2em);
+            margin-bottom: 12px;
+        }
+        .header p {
+            color: var(--muted);
+            font-size: 1.1em;
+        }
+
+        .header-subtitle {
+            color: var(--muted);
+            font-size: 0.95em;
+            margin-top: 8px;
+        }
+
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s;
+        }
+
+        .nav-tab svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .nav-tab:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 12px 24px rgba(57, 73, 255, 0.12);
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 16px 30px rgba(57, 73, 255, 0.2);
+        }
+
+        .content-section {
+            display: none;
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .key-point,
+        .info-box,
+        .warning-box,
+        .success-box {
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin: 24px 0;
+        }
+
+        .key-point {
+            background: var(--accent-soft);
+            border-left: 6px solid var(--accent);
+        }
+
+        .info-box {
+            background: #e0f2ff;
+            border-left: 6px solid var(--info);
+        }
+
+        .warning-box {
+            background: #fff7eb;
+            border-left: 6px solid var(--warning);
+        }
+
+        .success-box {
+            background: #ecfdf3;
+            border-left: 6px solid var(--success);
+        }
+
+        .flow-diagram {
+            background: var(--muted-surface);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+        }
+
+        .flow-step {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .flow-box {
+            flex: 1;
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 18px rgba(14, 23, 38, 0.05);
+        }
+
+        .flow-arrow {
+            display: flex;
+            justify-content: center;
+            margin: 6px 0 18px;
+        }
+
+        .flow-arrow svg {
+            width: 32px;
+            height: 32px;
+            color: var(--accent);
+        }
+
+        .stage {
+            padding: 28px;
+            background: var(--muted-surface);
+            border-radius: 22px;
+            margin-bottom: 28px;
+            border: 1px solid var(--border);
+        }
+
+        .stage-header {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .stage-number {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: 700;
+            border: 1px solid var(--accent);
+        }
+
+        .stage-title h3 {
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        .stage-content {
+            margin-top: 12px;
+            color: var(--muted);
+        }
+
+        .stage-content ul {
+            margin-top: 12px;
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 18px;
+            font-family: 'Fira Code', Consolas, monospace;
+            border-radius: 14px;
+            margin: 18px 0;
+            border: 1px solid #1e293b;
+            font-size: 0.95em;
+            overflow-x: auto;
+        }
+
+        .field-name {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 14px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--muted-surface);
+            color: var(--muted);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .status-card {
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 600;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .story-card {
+            background: var(--surface);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 22px;
+            margin-bottom: 24px;
+        }
+
+        .timeline {
+            border-left: 3px solid var(--accent-soft);
+            margin: 28px 0;
+            padding-left: 28px;
+        }
+
+        .timeline-item {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 4px solid var(--surface);
+            position: absolute;
+            left: -37px;
+            top: 6px;
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .comparison-table td strong {
+            color: var(--text);
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px 16px 48px;
+            }
+
+            .header {
+                padding: 32px 24px;
+            }
+
+            .content-section {
+                padding: 28px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <svg class="icon-defs" aria-hidden="true">
+        <symbol id="icon-bridge" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="22" r="3.5"></circle>
+            <circle cx="16" cy="10" r="3.5"></circle>
+            <circle cx="26" cy="22" r="3.5"></circle>
+            <path d="M6 22L16 10L26 22"></path>
+            <path d="M4 22C6 14 26 14 28 22"></path>
+        </symbol>
+        <symbol id="icon-overview" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="8" width="20" height="16" rx="4"></rect>
+            <path d="M6 14H26"></path>
+            <path d="M12 6V10"></path>
+            <path d="M20 6V10"></path>
+        </symbol>
+        <symbol id="icon-single" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="12" r="4"></circle>
+            <path d="M7 24C9.5 20 22.5 20 25 24"></path>
+        </symbol>
+        <symbol id="icon-swap" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11H23L19 7"></path>
+            <path d="M23 21H9L13 25"></path>
+        </symbol>
+        <symbol id="icon-chain" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="8" r="3"></circle>
+            <circle cx="8" cy="22" r="3"></circle>
+            <circle cx="24" cy="22" r="3"></circle>
+            <path d="M16 11L9 20"></path>
+            <path d="M16 11L23 20"></path>
+            <path d="M9 20H23"></path>
+        </symbol>
+        <symbol id="icon-status" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 24H26"></path>
+            <path d="M10 24V14"></path>
+            <path d="M16 24V8"></path>
+            <path d="M22 24V17"></path>
+        </symbol>
+        <symbol id="icon-database" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="16" cy="8" rx="9" ry="4"></ellipse>
+            <path d="M7 8V24C7 26.2 11 28 16 28C21 28 25 26.2 25 24V8"></path>
+            <path d="M7 16C7 18.2 11 20 16 20C21 20 25 18.2 25 16"></path>
+        </symbol>
+        <symbol id="icon-arrow" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8V24"></path>
+            <path d="M11 19L16 24L21 19"></path>
+        </symbol>
+        <symbol id="icon-info" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="10"></circle>
+            <path d="M16 14V22"></path>
+            <circle cx="16" cy="10" r="1"></circle>
+        </symbol>
+        <symbol id="icon-check" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="16" cy="16" r="10"></circle>
+            <path d="M11 16L15 20L22 12"></path>
+        </symbol>
+        <symbol id="icon-warning" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 6L28 26H4L16 6Z"></path>
+            <path d="M16 13V18"></path>
+            <circle cx="16" cy="22" r="1"></circle>
+        </symbol>
+    </svg>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="title-icon" aria-hidden="true">
+                <svg><use href="#icon-bridge"></use></svg>
+            </div>
+            <h1>BridgeConnect V2</h1>
+            <p>Transfer workflow documentation for housing provider operations</p>
+            <p class="header-subtitle"></p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showSection('overview')">
+                <svg aria-hidden="true"><use href="#icon-overview"></use></svg>
+                <span>Overview</span>
+            </div>
+            <div class="nav-tab" onclick="showSection('one-way')">
+                <svg aria-hidden="true"><use href="#icon-single"></use></svg>
+                <span>One-Way Transfer</span>
+            </div>
+            <div class="nav-tab" onclick="showSection('two-way')">
+                <svg aria-hidden="true"><use href="#icon-swap"></use></svg>
+                <span>Two-Way Swap</span>
+            </div>
+            <div class="nav-tab" onclick="showSection('three-way')">
+                <svg aria-hidden="true"><use href="#icon-chain"></use></svg>
+                <span>Three-Way Chain</span>
+            </div>
+            <div class="nav-tab" onclick="showSection('status')">
+                <svg aria-hidden="true"><use href="#icon-status"></use></svg>
+                <span>Status Reference</span>
+            </div>
+            <div class="nav-tab" onclick="showSection('database')">
+                <svg aria-hidden="true"><use href="#icon-database"></use></svg>
+                <span>Database Schema</span>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <h2>System Overview</h2>
+            
+            <div class="key-point">
+                <h4>Core Principle: Transfer Record = Nomination</h4>
+                <p>When a tenant asks their housing provider to move, the housing team logs that request as the transfer record. There is no separate nomination object; one record tracks the full journey from request to completion.</p>
+            </div>
+
+            <div class="flow-diagram">
+                <h3>High-Level Flow</h3>
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <strong>1. Housing Profile Setup</strong>
+                        <p>Housing provider creates tenant record &rarr; assigns current property &rarr; completes profile</p>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <strong>2. Transfer Request (Nomination)</strong>
+                        <p>Housing officer records transfer requirements &amp; preferences &rarr; Transfer record created</p>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <strong>3. Matching</strong>
+                        <p>Matching engine finds compatible properties/tenants &rarr; Creates matches</p>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <strong>4. Acceptance & Exchange</strong>
+                        <p>Housing providers accept matches &rarr; System detects circular exchanges</p>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <strong>5. Approval & Consent</strong>
+                        <p>Housing providers approve exchange &rarr; Tenants provide consent via housing teams</p>
+                    </div>
+                </div>
+                <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <strong>6. Completion</strong>
+                        <p>Schedule move &rarr; Record move-out &rarr; Record move-in &rarr; Complete</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>Housing-team owned process:</strong> Tenants never log into BridgeConnect directly. All data entry,
+                approvals, and updates are carried out by housing providers based on conversations with their residents.
+            </div>
+
+            <h3>Transfer Status Progression</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th>Next Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge status-seeking">seeking_match</span></td>
+                            <td>Transfer created, in matching pool</td>
+                            <td>Wait for matching engine to find compatible properties</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-matched">matched</span></td>
+                            <td>Compatible property found</td>
+                            <td>HAs review and accept/decline match</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-exchange">exchange_pending</span></td>
+                            <td>Part of circular exchange</td>
+                            <td>Wait for all HAs in exchange to approve</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-approved">exchange_approved</span></td>
+                            <td>All HAs approved exchange</td>
+                            <td>Tenant must provide consent</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-consented">consented</span></td>
+                            <td>Tenant consented to move</td>
+                            <td>Schedule and execute move</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-completed">completed</span></td>
+                            <td>Tenant successfully moved</td>
+                            <td>None - transfer complete!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <strong> Important:</strong> For exchanges (2-way, 3-way, etc.), certain status changes happen SYNCHRONOUSLY for all participants. This means all transfers in an exchange move together at key checkpoints.
+            </div>
+        </div>
+
+        <!-- One-Way Transfer Section -->
+        <div id="one-way" class="content-section">
+            <h2>One-Way Transfer (Tenant via Housing Provider to Vacant Property)</h2>
+            
+            <div class="scenario-card">
+                <h3>Scenario Example</h3>
+                <div class="participant">
+                    <h5>Tenant: John Smith (Manchester HA)</h5>
+                    <p><strong>Current:</strong> 10 Oak Street (2-bed, Manchester)</p>
+                    <p><strong>Wants:</strong> 2-bed in Leeds (closer to work)</p>
+                </div>
+                <div class="participant" style="border-left-color: #2196f3;">
+                    <h5>Available Property: 25 Elm Avenue (Leeds HA)</h5>
+                    <p><strong>Type:</strong> 2-bed flat, Ground floor</p>
+                    <p><strong>Status:</strong> Vacant and nominated</p>
+                </div>
+            </div>
+
+            <!-- Stage 1 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">1</div>
+                    <div class="stage-title">
+                        <h3>Housing Profile Setup</h3>
+                        <span class="stage-status">Initial Setup</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>1.1 Housing provider creates tenant record &rarr; assigns current property &rarr; completes profile</h4>
+                        <div class="api-endpoint">POST /providers/tenants</div>
+                        <div class="code-block">{
+  "first_name": "John",
+  "last_name": "Smith",
+  "date_of_birth": "1985-05-15",
+  "email_address": "john@email.com",
+  "housing_provider_id": 1,
+  "medical_conditions": [
+    { "condition": "Mobility issues" }
+  ]
+}</div>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">tenants</span>: Record created (id: 123)</li>
+                                <li><span class="field-name">housing_provider_id</span>: 1 (Manchester)</li>
+                                <li><span class="field-name">status</span>: "Active"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>1.2 Assign Current Property</h4>
+                        <div class="api-endpoint">Function: transfer/assign_tenant_to_property</div>
+                        <div class="code-block">function.run "transfer/assign_tenant_to_property" {
+  input = {
+    tenant_id: 123,
+    property_id: 456,  // 10 Oak Street
+    start_date: "2020-01-01",
+    is_current: true
+  }
+}</div>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">tenant_property</span>: Record created</li>
+                                <li><span class="field-name">tenant_id</span>: 123</li>
+                                <li><span class="field-name">property_id</span>: 456</li>
+                                <li><span class="field-name">is_current</span>: true</li>
+                                <li><span class="field-name">properties[456].is_vacant</span>: false</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>1.3 Complete Profile</h4>
+                        <ul>
+                            <li>Add family members &rarr; Bedroom requirement calculated</li>
+                            <li>Approve eligibility (rent arrears, tenancy length, etc.)</li>
+                            <li>Record declarations (no breaches, etc.)</li>
+                            <li>Get GDPR signature</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">2</div>
+                    <div class="stage-title">
+                        <h3>Transfer Request (Nomination)</h3>
+                        <span class="stage-status">seeking_match</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>Create Transfer Record</h4>
+                        <div class="api-endpoint">POST /providers/transfers/request</div>
+                        <div class="code-block">{
+  "tenant_id": 123,
+  "from_property_id": 456,
+  "bedroom": 2,
+  "preferred_region_ids": [5],  // Leeds
+  "transfer_reason_id": 1,  // Closer to work
+  
+  "eligibility": {
+    "is_approved": true,
+    "tenancy_length_months": 60,
+    "rent_arrears_amount": 0
+  },
+  
+  "declarations": {
+    "no_social_behaviors": true,
+    "past_12_months_no_breach_tenancy": true,
+    "tenant_signed": true
+  },
+  
+  "gdpr_consent": {
+    "signature_received": true,
+    "signature_date": "2025-02-09",
+    "data_sharing_approved": true
+  }
+}</div>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfers</span>: Record created (id: 100)</li>
+                                <li><span class="field-name">status</span>: "seeking_match" </li>
+                                <li><span class="field-name">tenant_id</span>: 123</li>
+                                <li><span class="field-name">from_property_id</span>: 456</li>
+                                <li><span class="field-name">to_property_id</span>: null (not yet)</li>
+                                <li><span class="field-name">tenants[123].active_transfer_id</span>: 100</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong> Transfer Created:</strong> John is now in the matching pool! The system will look for vacant properties in Leeds with 2 bedrooms.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">3</div>
+                    <div class="stage-title">
+                        <h3>Matching</h3>
+                        <span class="stage-status">matched</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>3.1 Matching Engine Runs (Daily Task)</h4>
+                        <div class="api-endpoint">Task: bridgeconnect_run_matching</div>
+                        <div class="code-block">// Find vacant properties matching requirements
+db.query properties {
+  where = region_id in [5]  // Leeds
+    AND bedrooms == 2
+    AND is_vacant == true
+    AND is_nominated == true
+    AND status == "Active"
+} as $properties
+
+// Create match
+db.add transfer_matches {
+  data = {
+    transfer_id: 100,
+    property_id: 789,  // 25 Elm Avenue
+    match_score: 85
+  }
+}</div>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfer_matches</span>: Record created (id: 50)</li>
+                                <li><span class="field-name">transfer_id</span>: 100</li>
+                                <li><span class="field-name">property_id</span>: 789</li>
+                                <li><span class="field-name">status</span>: "Pending"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>3.2 HAs Accept Match</h4>
+                        <div class="api-endpoint">POST /providers/matches/50/accept</div>
+                        <p>Both Manchester HA (tenant's HA) and Leeds HA (property's HA) must accept the match.</p>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfer_matches[50].status</span>: "Accepted"</li>
+                                <li><span class="field-name">transfers[100].status</span>: "matched" </li>
+                                <li><span class="field-name">transfers[100].to_property_id</span>: 789</li>
+                                <li><span class="field-name">transfers[100].to_ha_id</span>: 2 (Leeds)</li>
+                                <li><span class="field-name">transfers[100].match_id</span>: 50</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong> Match Found:</strong> John's transfer now has a destination property (25 Elm Avenue)! Since this is a one-way transfer (not a swap), it can proceed directly to approval.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">4</div>
+                    <div class="stage-title">
+                        <h3>Approval Process</h3>
+                        <span class="stage-status">exchange_approved</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>HA Approvals</h4>
+                        <p>For a one-way transfer to a vacant property, both HAs must approve:</p>
+                        <ul>
+                            <li><strong>Manchester HA:</strong> Approves tenant leaving (from_ha_approved)</li>
+                            <li><strong>Leeds HA:</strong> Approves tenant moving in (to_ha_approved)</li>
+                        </ul>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfers[100].from_ha_approved</span>: true</li>
+                                <li><span class="field-name">transfers[100].to_ha_approved</span>: true</li>
+                                <li><span class="field-name">transfers[100].status</span>: "exchange_approved" </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>Note:</strong> For one-way transfers, the status is still called "exchange_approved" for consistency, even though there's no actual exchange happening.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 5 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">5</div>
+                    <div class="stage-title">
+                        <h3>Tenant Consent</h3>
+                        <span class="stage-status">consented</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>Record Consent</h4>
+                        <div class="api-endpoint">POST /providers/transfers/100/consent</div>
+                        <p>Tenant formally agrees to the move. This can only happen after both HAs have approved.</p>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfers[100].has_consent</span>: true</li>
+                                <li><span class="field-name">transfers[100].consented_at</span>: "2025-02-12"</li>
+                                <li><span class="field-name">transfers[100].status</span>: "consented" </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 6 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">6</div>
+                    <div class="stage-title">
+                        <h3>Move Execution & Completion</h3>
+                        <span class="stage-status">completed</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 15: Schedule Move</div>
+                            <div class="api-endpoint">POST /transfers/100/schedule-move</div>
+                            <p><strong>scheduled_move_date:</strong> 2025-02-20</p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 20: Move Out</div>
+                            <div class="api-endpoint">POST /transfers/100/record-move-out</div>
+                            <div class="database-state">
+                                <h5>Database Changes:</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[100].move_out_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">tenant_property[old].end_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">tenant_property[old].is_current</span>: false</li>
+                                    <li><span class="field-name">properties[456].is_vacant</span>: true</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 20: Move In</div>
+                            <div class="api-endpoint">POST /transfers/100/record-move-in</div>
+                            <div class="database-state">
+                                <h5>Database Changes:</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[100].move_in_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">tenant_property[new]</span>: Created</li>
+                                    <li><span class="field-name">tenant_property[new].start_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">tenant_property[new].is_current</span>: true</li>
+                                    <li><span class="field-name">properties[789].is_vacant</span>: false</li>
+                                    <li><span class="field-name">properties[789].incoming_tenant</span>: 123</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 20: Auto-Complete</div>
+                            <p>System automatically marks transfer as completed when both move dates are recorded.</p>
+                            <div class="database-state">
+                                <h5>Database Changes:</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[100].status</span>: "completed" </li>
+                                    <li><span class="field-name">transfers[100].completion_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">tenants[123].active_transfer_id</span>: null</li>
+                                    <li><span class="field-name">tenants[123].housing_provider_id</span>: 2 (Leeds)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong> Transfer Complete!</strong> John has successfully moved from 10 Oak Street (Manchester) to 25 Elm Avenue (Leeds). All database records reflect the new housing situation.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Two-Way Swap Section -->
+        <div id="two-way" class="content-section">
+            <h2>Two-Way Swap (Mutual Exchange)</h2>
+            
+            <div class="scenario-card">
+                <h3>Scenario Example</h3>
+                <div class="participant">
+                    <h5>Tenant A: John Smith (Manchester HA)</h5>
+                    <p><strong>Current:</strong> 10 Oak Street (2-bed, Manchester)</p>
+                    <p><strong>Wants:</strong> 2-bed in Leeds</p>
+                </div>
+                <div class="participant">
+                    <h5>Tenant B: Sarah Jones (Leeds HA)</h5>
+                    <p><strong>Current:</strong> 25 Elm Avenue (2-bed, Leeds)</p>
+                    <p><strong>Wants:</strong> 2-bed in Manchester</p>
+                </div>
+                <div class="key-point">
+                    <strong>The Swap:</strong> John wants Sarah's property, and Sarah wants John's property! This creates a 2-way circular exchange.
+                </div>
+            </div>
+
+            <!-- Stages 1-3 same as one-way -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">1-3</div>
+                    <div class="stage-title">
+                        <h3>Onboarding, Requests, & Matching</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <p>Steps 1-3 are the same as one-way transfer, but happen for BOTH tenants:</p>
+                    <div class="info-box">
+                        <h4>Results:</h4>
+                        <ul>
+                            <li><strong>Transfer A (John):</strong> id: 100, status: "matched", wants property 789 (Sarah's current)</li>
+                            <li><strong>Transfer B (Sarah):</strong> id: 101, status: "matched", wants property 456 (John's current)</li>
+                        </ul>
+                        <div class="database-state">
+                            <h5>Matches Created:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">Match 50</span>: Transfer 100 -> Property 789</li>
+                                <li><span class="field-name">Match 51</span>: Transfer 101 -> Property 456</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4: Exchange Detection -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">4</div>
+                    <div class="stage-title">
+                        <h3>Exchange Detection</h3>
+                        <span class="stage-status">exchange_pending</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>Circular Exchange Algorithm</h4>
+                        <div class="api-endpoint">Task: bridgeconnect_detect_exchanges (Hourly)</div>
+                        <div class="code-block">// Check all accepted matches for circular patterns
+foreach (match1, match2) {
+  if (
+    match1.current_property == match2.desired_property &&
+    match2.current_property == match1.desired_property
+  ) {
+    // 2-WAY SWAP DETECTED!
+    create_exchange([match1, match2]);
+  }
+}</div>
+                        <p><strong>Detection:</strong></p>
+                        <ul>
+                            <li>Match 50: John wants Property 789 (Sarah's current)</li>
+                            <li>Match 51: Sarah wants Property 456 (John's current)</li>
+                            <li> Circular pattern found!</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Create Exchange Record</h4>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">potential_exchanges</span>: Record created (id: 10)</li>
+                                <li><span class="field-name">exchange_type</span>: "2-way"</li>
+                                <li><span class="field-name">housing_provider_ids</span>: [1, 2]</li>
+                                <li><span class="field-name">total_approvals_needed</span>: 2</li>
+                                <li><span class="field-name">status</span>: "Pending"</li>
+                            </ul>
+                        </div>
+
+                        <div class="database-state">
+                            <h5>Participants Created:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">Participant 1</span>: transfer_id: 100, gives: 456, receives: 789</li>
+                                <li><span class="field-name">Participant 2</span>: transfer_id: 101, gives: 789, receives: 456</li>
+                            </ul>
+                        </div>
+
+                        <div class="database-state">
+                            <h5>Transfers Updated (SYNCHRONIZED):</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfers[100].status</span>: "exchange_pending" </li>
+                                <li><span class="field-name">transfers[100].exchange_id</span>: 10</li>
+                                <li><span class="field-name">transfers[101].status</span>: "exchange_pending" </li>
+                                <li><span class="field-name">transfers[101].exchange_id</span>: 10</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong> Exchange Created:</strong> Both transfers are now linked in a 2-way exchange. They will move through the approval process together.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 5: Exchange Approval -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">5</div>
+                    <div class="stage-title">
+                        <h3>Exchange Approval</h3>
+                        <span class="stage-status">exchange_approved</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 8: Manchester HA Approves</div>
+                            <div class="api-endpoint">POST /exchanges/10/approve (Participant 1)</div>
+                            <div class="database-state">
+                                <h5>Database Changes:</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">participants[1].ha_approval_status</span>: "Approved"</li>
+                                    <li><span class="field-name">exchange[10].total_approvals_received</span>: 1/2</li>
+                                    <li><span class="field-name">Both transfers</span>: Still "exchange_pending"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 10: Leeds HA Approves (LAST APPROVAL)</div>
+                            <div class="api-endpoint">POST /exchanges/10/approve (Participant 2)</div>
+                            <div class="database-state">
+                                <h5>Database Changes (SYNCHRONIZED):</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">participants[2].ha_approval_status</span>: "Approved"</li>
+                                    <li><span class="field-name">exchange[10].total_approvals_received</span>: 2/2 </li>
+                                    <li><span class="field-name">exchange[10].status</span>: "All_Approved"</li>
+                                    <li><span class="field-name">transfers[100].status</span>: "exchange_approved" </li>
+                                    <li><span class="field-name">transfers[100].from_ha_approved</span>: true</li>
+                                    <li><span class="field-name">transfers[100].to_ha_approved</span>: true</li>
+                                    <li><span class="field-name">transfers[101].status</span>: "exchange_approved" </li>
+                                    <li><span class="field-name">transfers[101].from_ha_approved</span>: true</li>
+                                    <li><span class="field-name">transfers[101].to_ha_approved</span>: true</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong> Synchronized Update:</strong> Both transfers change status to "exchange_approved" at the SAME TIME when the last HA approves. This ensures the exchange stays in sync.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 6: Consent -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">6</div>
+                    <div class="stage-title">
+                        <h3>Tenant Consent</h3>
+                        <span class="stage-status">consented</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 12: John Consents</div>
+                            <div class="api-endpoint">POST /transfers/100/consent</div>
+                            <div class="database-state">
+                                <h5>Database Changes:</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[100].has_consent</span>: true</li>
+                                    <li><span class="field-name">transfers[100].status</span>: "consented" </li>
+                                    <li><span class="field-name">transfers[101]</span>: Still "exchange_approved"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 14: Sarah Consents</div>
+                            <div class="api-endpoint">POST /transfers/101/consent</div>
+                            <div class="database-state">
+                                <h5>Database Changes:</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[101].has_consent</span>: true</li>
+                                    <li><span class="field-name">transfers[101].status</span>: "consented" </li>
+                                    <li><span class="field-name">exchange[10].all_consents_received</span>: true</li>
+                                    <li><span class="field-name">exchange[10].ready_for_completion</span>: true</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="key-point">
+                        <strong>Note:</strong> Tenants can consent independently at their own pace. The system tracks when all consents are received and marks the exchange as ready for completion.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 7: Completion -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">7</div>
+                    <div class="stage-title">
+                        <h3>Move Execution & Completion</h3>
+                        <span class="stage-status">completed</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="warning-box">
+                        <strong> CRITICAL:</strong> For 2-way swaps, BOTH tenants must move on the SAME DAY (or very close dates) to avoid data inconsistencies. The completion is SYNCHRONIZED.
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 15: Schedule Move</div>
+                            <div class="api-endpoint">POST /exchanges/10/schedule-move</div>
+                            <p><strong>scheduled_move_date:</strong> 2025-02-20 (for all participants)</p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 20: Complete Exchange</div>
+                            <div class="api-endpoint">POST /exchanges/10/complete</div>
+                            <p>This API completes ALL transfers in the exchange atomically:</p>
+                            
+                            <div class="code-block">// Step 1: Complete John's Transfer
+- End John's tenant_property at Property 456
+- Create John's tenant_property at Property 789
+- Property 456  vacant
+- Property 789  occupied by John
+
+// Step 2: Complete Sarah's Transfer
+- End Sarah's tenant_property at Property 789
+- Create Sarah's tenant_property at Property 456
+- Property 789  vacant (then immediately occupied by John)
+- Property 456  occupied by Sarah (was vacant from John)</div>
+
+                            <div class="database-state">
+                                <h5>Database Changes (ALL AT ONCE):</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[100].status</span>: "completed" </li>
+                                    <li><span class="field-name">transfers[100].move_out_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">transfers[100].move_in_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">transfers[101].status</span>: "completed" </li>
+                                    <li><span class="field-name">transfers[101].move_out_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">transfers[101].move_in_date</span>: "2025-02-20"</li>
+                                    <li><span class="field-name">exchange[10].status</span>: "Completed"</li>
+                                    <li><span class="field-name">tenants[123].housing_provider_id</span>: 2 (Leeds)</li>
+                                    <li><span class="field-name">tenants[124].housing_provider_id</span>: 1 (Manchester)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong> 2-Way Swap Complete!</strong> John and Sarah have successfully swapped properties. Both are now in their desired locations!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Three-Way Chain Section -->
+        <div id="three-way" class="content-section">
+            <h2>Three-Way Chain (Circular Exchange)</h2>
+            
+            <div class="scenario-card">
+                <h3>Scenario Example</h3>
+                <div class="participant">
+                    <h5>Tenant A: John Smith (Manchester HA)</h5>
+                    <p><strong>Current:</strong> Property X (2-bed, Manchester)</p>
+                    <p><strong>Wants:</strong> 2-bed in Leeds</p>
+                </div>
+                <div class="participant">
+                    <h5>Tenant B: Sarah Jones (Leeds HA)</h5>
+                    <p><strong>Current:</strong> Property Y (2-bed, Leeds)</p>
+                    <p><strong>Wants:</strong> 2-bed in Liverpool</p>
+                </div>
+                <div class="participant">
+                    <h5>Tenant C: Mike Wilson (Liverpool HA)</h5>
+                    <p><strong>Current:</strong> Property Z (2-bed, Liverpool)</p>
+                    <p><strong>Wants:</strong> 2-bed in Manchester</p>
+                </div>
+                <div class="key-point">
+                    <strong>The Chain:</strong> John  wants Y (Sarah's)  Sarah wants Z (Mike's)  Mike wants X (John's)  Back to John! 
+                </div>
+            </div>
+
+            <!-- Stages 1-3 -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">1-3</div>
+                    <div class="stage-title">
+                        <h3>Onboarding, Requests, & Matching</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <p>Steps 1-3 happen for ALL THREE tenants independently:</p>
+                    <div class="info-box">
+                        <h4>Results:</h4>
+                        <ul>
+                            <li><strong>Transfer A (John):</strong> id: 100, wants Property Y</li>
+                            <li><strong>Transfer B (Sarah):</strong> id: 101, wants Property Z</li>
+                            <li><strong>Transfer C (Mike):</strong> id: 102, wants Property X</li>
+                        </ul>
+                        <div class="database-state">
+                            <h5>Matches Created:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">Match 50</span>: Transfer 100 -> Property Y (Sarah's current)</li>
+                                <li><span class="field-name">Match 51</span>: Transfer 101 -> Property Z (Mike's current)</li>
+                                <li><span class="field-name">Match 52</span>: Transfer 102  Property X (John's current)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4: 3-Way Detection -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">4</div>
+                    <div class="stage-title">
+                        <h3>3-Way Exchange Detection</h3>
+                        <span class="stage-status">exchange_pending</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="info-box">
+                        <h4>Circular Chain Detection</h4>
+                        <div class="code-block">// Check for 3-way circular patterns
+foreach (m1, m2, m3) {
+  if (
+    m1.desired == m2.current &&
+    m2.desired == m3.current &&
+    m3.desired == m1.current
+  ) {
+    // 3-WAY CHAIN DETECTED!
+    create_exchange([m1, m2, m3]);
+  }
+}</div>
+                        <div class="flow-diagram">
+                            <h4>The Circular Chain:</h4>
+                            <div class="flow-step">
+                                <div class="flow-box">John (X)  wants Property Y</div>
+                            </div>
+                            <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                            <div class="flow-step">
+                                <div class="flow-box">Sarah (Y)  wants Property Z</div>
+                            </div>
+                            <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                            <div class="flow-step">
+                                <div class="flow-box">Mike (Z)  wants Property X</div>
+                            </div>
+                            <div class="flow-arrow" aria-hidden="true">
+                    <svg><use href="#icon-arrow"></use></svg>
+                </div>
+                            <div class="flow-step">
+                                <div class="flow-box" style="border-color: #4caf50; background: #e8f5e9;">
+                                    <strong>Back to John!  CIRCULAR!</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Create 3-Way Exchange</h4>
+                        <div class="database-state">
+                            <h5>Database Changes:</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">potential_exchanges</span>: Record created (id: 11)</li>
+                                <li><span class="field-name">exchange_type</span>: "3-way"</li>
+                                <li><span class="field-name">housing_provider_ids</span>: [1, 2, 3]</li>
+                                <li><span class="field-name">total_approvals_needed</span>: 3</li>
+                                <li><span class="field-name">status</span>: "Pending"</li>
+                            </ul>
+                        </div>
+
+                        <div class="database-state">
+                            <h5>All 3 Transfers Updated (SYNCHRONIZED):</h5>
+                            <ul class="field-list">
+                                <li><span class="field-name">transfers[100].status</span>: "exchange_pending" </li>
+                                <li><span class="field-name">transfers[100].exchange_id</span>: 11</li>
+                                <li><span class="field-name">transfers[101].status</span>: "exchange_pending" </li>
+                                <li><span class="field-name">transfers[101].exchange_id</span>: 11</li>
+                                <li><span class="field-name">transfers[102].status</span>: "exchange_pending" </li>
+                                <li><span class="field-name">transfers[102].exchange_id</span>: 11</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 5: 3-Way Approval -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">5</div>
+                    <div class="stage-title">
+                        <h3>3-Way Exchange Approval</h3>
+                        <span class="stage-status">exchange_approved</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 8: Manchester HA Approves</div>
+                            <p>Approvals: 1/3</p>
+                            <p>All transfers still: "exchange_pending"</p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 9: Leeds HA Approves</div>
+                            <p>Approvals: 2/3</p>
+                            <p>All transfers still: "exchange_pending"</p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 10: Liverpool HA Approves (LAST!)</div>
+                            <div class="api-endpoint">POST /exchanges/11/approve (Participant 3)</div>
+                            <div class="database-state">
+                                <h5>ALL 3 Transfers Update Together (SYNCHRONIZED):</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">exchange[11].total_approvals_received</span>: 3/3 </li>
+                                    <li><span class="field-name">exchange[11].status</span>: "All_Approved"</li>
+                                    <li><span class="field-name">transfers[100].status</span>: "exchange_approved" </li>
+                                    <li><span class="field-name">transfers[101].status</span>: "exchange_approved" </li>
+                                    <li><span class="field-name">transfers[102].status</span>: "exchange_approved" </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong> Synchronized Approval:</strong> ALL THREE transfers change to "exchange_approved" at the SAME TIME when the last HA approves. None of them can proceed individually.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 6: Consent -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">6</div>
+                    <div class="stage-title">
+                        <h3>Tenant Consent (Independent)</h3>
+                        <span class="stage-status">consented</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 12: John Consents</div>
+                            <p>Transfer 100: "consented" </p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 13: Sarah Consents</div>
+                            <p>Transfer 101: "consented" </p>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 14: Mike Consents</div>
+                            <p>Transfer 102: "consented" </p>
+                            <p>All consents received! Exchange ready for completion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 7: 3-Way Completion -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number">7</div>
+                    <div class="stage-title">
+                        <h3>3-Way Completion (Atomic)</h3>
+                        <span class="stage-status">completed</span>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="warning-box">
+                        <strong> CRITICAL:</strong> All THREE tenants MUST move together! The completion is a single atomic operation to prevent data inconsistencies.
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Why Atomic Completion is Required:</h4>
+                        <div class="code-block">// If we complete John first:
+John moves out of X  X becomes vacant
+John moves into Y  Y becomes occupied by John
+
+BUT WAIT! Sarah is STILL at Property Y!
+ Data inconsistency!
+
+// The Solution:
+Complete ALL THREE transfers in ONE operation:
+1. John leaves X, Sarah leaves Y, Mike leaves Z
+2. John enters Y, Sarah enters Z, Mike enters X
+3. All at the SAME TIME!</div>
+                    </div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Day 20: Complete 3-Way Exchange</div>
+                            <div class="api-endpoint">POST /exchanges/11/complete</div>
+                            
+                            <div class="code-block">// Atomic Completion Sequence:
+
+// Step 1: Complete Transfer A (John)
+- End: tenant_property[John at X]
+- Create: tenant_property[John at Y]
+- Property X  vacant
+- Property Y  occupied by John
+
+// Step 2: Complete Transfer B (Sarah)
+- End: tenant_property[Sarah at Y]
+- Create: tenant_property[Sarah at Z]
+- Property Y  vacant (then occupied by John from Step 1)
+- Property Z  occupied by Sarah
+
+// Step 3: Complete Transfer C (Mike)
+- End: tenant_property[Mike at Z]
+- Create: tenant_property[Mike at X]
+- Property Z  vacant (then occupied by Sarah from Step 2)
+- Property X  occupied by Mike (was vacant from Step 1)</div>
+
+                            <div class="database-state">
+                                <h5>Final State (ALL AT ONCE):</h5>
+                                <ul class="field-list">
+                                    <li><span class="field-name">transfers[100].status</span>: "completed" </li>
+                                    <li><span class="field-name">transfers[101].status</span>: "completed" </li>
+                                    <li><span class="field-name">transfers[102].status</span>: "completed" </li>
+                                    <li><span class="field-name">exchange[11].status</span>: "Completed" </li>
+                                    <li><span class="field-name">John</span>: Now at Property Y (Leeds)</li>
+                                    <li><span class="field-name">Sarah</span>: Now at Property Z (Liverpool)</li>
+                                    <li><span class="field-name">Mike</span>: Now at Property X (Manchester)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong> 3-Way Chain Complete!</strong> All three tenants have successfully moved into their desired properties. The circular chain is complete!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edge Case -->
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-number"></div>
+                    <div class="stage-title">
+                        <h3>Edge Case: One Tenant Withdraws</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="warning-box">
+                        <strong>Scenario:</strong> What if Sarah withdraws consent after John and Mike already consented?
+                        
+                        <div class="code-block">Status before withdrawal:
+- John: "consented" 
+- Sarah: "exchange_approved" 
+- Mike: "consented" 
+
+Sarah withdraws  Entire exchange CANCELLED:
+- Transfer 100: "cancelled" 
+- Transfer 101: "cancelled" 
+- Transfer 102: "cancelled" 
+
+All 3 tenants go back to "seeking_match"
+Can be matched again in future exchanges</div>
+                    </div>
+                    <p><strong>Key Point:</strong> In circular exchanges, if ANY participant withdraws, the ENTIRE exchange must be cancelled. You can't have 2 out of 3 people move in a 3-way chain!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Reference Section -->
+        <div id="status" class="content-section">
+            <h2>Status Reference Guide</h2>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Status</th>
+                            <th style="width: 40%;">Description</th>
+                            <th style="width: 20%;">Update Behavior</th>
+                            <th style="width: 20%;">Next Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge status-seeking">seeking_match</span></td>
+                            <td>Transfer request created and in matching pool</td>
+                            <td>Independent</td>
+                            <td>matched</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-matched">matched</span></td>
+                            <td>Compatible property found and match accepted by both HAs</td>
+                            <td>Independent</td>
+                            <td>exchange_pending or exchange_approved</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-exchange">exchange_pending</span></td>
+                            <td>Part of circular exchange, waiting for all HA approvals</td>
+                            <td><strong>Synchronized</strong> (all participants together)</td>
+                            <td>exchange_approved</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-approved">exchange_approved</span></td>
+                            <td>All HAs have approved the exchange</td>
+                            <td><strong>Synchronized</strong> (when last HA approves)</td>
+                            <td>consented</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-consented">consented</span></td>
+                            <td>Tenant has provided consent for the move</td>
+                            <td>Independent</td>
+                            <td>completion_scheduled</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge">completion_scheduled</span></td>
+                            <td>Move date has been scheduled</td>
+                            <td><strong>Synchronized</strong> (for exchanges)</td>
+                            <td>moved_out</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge">moved_out</span></td>
+                            <td>Tenant has vacated old property</td>
+                            <td>Independent (can record separately)</td>
+                            <td>moved_in</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge">moved_in</span></td>
+                            <td>Tenant has entered new property</td>
+                            <td>Independent</td>
+                            <td>completed</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-completed">completed</span></td>
+                            <td>Transfer fully completed (both move dates recorded)</td>
+                            <td><strong>Synchronized</strong> (for exchanges)</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge" style="background: #dc3545;">cancelled</span></td>
+                            <td>Transfer cancelled by HA or tenant</td>
+                            <td>Individual or all (if in exchange)</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge" style="background: #6c757d;">expired</span></td>
+                            <td>No match found within expiry period</td>
+                            <td>Independent</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Synchronized vs Independent Updates</h3>
+
+            <div class="info-box">
+                <h4>Independent Updates </h4>
+                <p>These status changes can happen for each transfer separately:</p>
+                <ul>
+                    <li>seeking_match  matched</li>
+                    <li>exchange_approved  consented</li>
+                    <li>completion_scheduled  moved_out</li>
+                    <li>moved_out  moved_in</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>Synchronized Updates </h4>
+                <p>These status changes MUST happen for ALL participants in an exchange at the SAME TIME:</p>
+                <ul>
+                    <li><strong>matched  exchange_pending:</strong> When exchange is detected</li>
+                    <li><strong>exchange_pending  exchange_approved:</strong> When LAST HA approves</li>
+                    <li><strong>consented  completion_scheduled:</strong> When move date is set</li>
+                    <li><strong>moved_in  completed:</strong> When completing the exchange</li>
+                </ul>
+            </div>
+
+            <h3>Status Validation Rules</h3>
+
+            <div class="code-block">// Before updating to "exchange_approved"
+precondition (all_participants_have_ha_approval) {
+  error = "Cannot approve until all HAs approve"
+}
+
+// Before updating to "consented"
+precondition (from_ha_approved && to_ha_approved) {
+  error = "Both HAs must approve before consent"
+}
+
+// Before updating to "completed"
+precondition (has_consent && move_out_date && move_in_date) {
+  error = "Must have consent and both move dates"
+}</div>
+        </div>
+
+        <!-- Database Schema Section -->
+        <div id="database" class="content-section">
+            <h2>Database Schema</h2>
+
+            <h3>Core Tables</h3>
+
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-title">
+                        <h3>transfers (The Central Record)</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="code-block">table transfers {
+  // Identity
+  int id
+  int tenant_id
+  
+  // Current Situation
+  int from_property_id
+  int from_ha_id
+  
+  // Desired Situation
+  int bedroom
+  int[] preferred_region_ids
+  int[] excluded_area_ids
+  int[] required_medical_condition_ids
+  int transfer_reason_id
+  text additional_requirements
+  
+  // Where Going (filled after match)
+  int? to_property_id
+  int? to_ha_id
+  
+  // Eligibility (for THIS request)
+  object eligibility {
+    bool is_approved
+    int tenancy_length_months
+    decimal rent_arrears_amount
+    timestamp approved_at
+    int approved_by
+  }
+  
+  // Declarations (for THIS request)
+  object declarations {
+    bool no_social_behaviors
+    bool past_12_months_no_breach_tenancy
+    timestamp declared_at
+    int declared_by
+    bool tenant_signed
+  }
+  
+  // GDPR Consent (for THIS request)
+  object gdpr_consent {
+    bool signature_received
+    timestamp signature_date
+    text signature_method
+    bool data_sharing_approved
+  }
+  
+  // Status & Workflow
+  enum status  // See status progression above
+  int? match_id
+  int? exchange_id
+  
+  // Approvals
+  bool from_ha_approved
+  bool to_ha_approved
+  timestamp? from_ha_approval_date
+  timestamp? to_ha_approval_date
+  
+  // Consent
+  bool has_consent
+  timestamp? consented_at
+  
+  // Move Dates
+  date? requested_move_date
+  date? scheduled_move_date
+  date? move_out_date  // When left old property
+  date? move_in_date   // When entered new property
+  
+  // Completion
+  timestamp? completion_date
+  
+  // Audit
+  timestamp created_at
+  timestamp updated_at
+  int? updated_by
+}</div>
+                </div>
+            </div>
+
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-title">
+                        <h3>tenants</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="code-block">table tenants {
+  // Identity
+  int id
+  text first_name
+  text last_name
+  date date_of_birth
+  int age  // Auto-calculated
+  email email_address
+  text contact_number
+  
+  // Housing Association
+  int housing_provider_id
+  
+  // Medical Needs (ongoing)
+  object[] medical_conditions
+  bool has_medical_bedroom_exemption
+  bool must_have_ground_floor
+  
+  // Current Transfer
+  int? active_transfer_id
+  int? transfer_status_id
+  
+  // Status
+  enum status ("Active", "Inactive")
+  
+  // Audit
+  timestamp created_at
+  timestamp updated_at
+  
+  // REMOVED FIELDS (moved to transfers):
+  //  bool is_nominated
+  //  int bedroom
+  //  int[] preferred_region_id
+  //  int transfer_reason_id
+  //  object eligibility
+  //  object declarations
+}</div>
+                </div>
+            </div>
+
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-title">
+                        <h3>tenant_property (Residence History)</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="code-block">table tenant_property {
+  int id
+  int tenant_id
+  int property_id
+  
+  date? start_date      // Move-in date
+  date? end_date        // Move-out date
+  bool is_current       // Currently living here?
+  
+  int version
+  timestamp created_at
+}</div>
+                    <div class="info-box">
+                        <h4>Example Records:</h4>
+                        <div class="code-block">// John's residence history
+Record 1: tenant_id: 123, property_id: 456
+          start_date: 2020-01-01
+          end_date: 2025-02-20
+          is_current: false
+
+Record 2: tenant_id: 123, property_id: 789
+          start_date: 2025-02-20
+          end_date: null
+          is_current: true  Currently here!</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-title">
+                        <h3>transfer_matches</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="code-block">table transfer_matches {
+  int id
+  int transfer_id  // Links to transfers table
+  int property_id  // The property being matched
+  
+  int current_property_of_tenant  // For exchange detection
+  int match_score  // 0-100
+  
+  enum status ("Pending", "Accepted", "Declined")
+  
+  // HA Review
+  text tenant_ha_status
+  text property_ha_status
+  timestamp? tenant_ha_reviewed_at
+  timestamp? property_ha_reviewed_at
+  
+  timestamp created_at
+}</div>
+                </div>
+            </div>
+
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-title">
+                        <h3>potential_exchanges</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="code-block">table potential_exchanges {
+  int id
+  
+  text exchange_type  // "2-way", "3-way", etc.
+  enum status  // "Pending", "All_Approved", "Completed"
+  
+  int[] housing_provider_ids
+  int total_approvals_needed
+  int total_approvals_received
+  
+  date? scheduled_move_date
+  bool? all_consents_received
+  bool? ready_for_completion
+  
+  timestamp? expires_at
+  int max_extensions
+  
+  timestamp created_at
+  timestamp? completed_at
+}</div>
+                </div>
+            </div>
+
+            <div class="stage">
+                <div class="stage-header">
+                    <div class="stage-title">
+                        <h3>potential_exchange_participants</h3>
+                    </div>
+                </div>
+                <div class="stage-content">
+                    <div class="code-block">table potential_exchange_participants {
+  int id
+  int potential_exchange_id
+  int position_in_chain  // 1, 2, 3, etc.
+  
+  int transfer_id  // Links to existing transfer
+  int tenant_id
+  
+  int gives_property_id     // Leaving
+  int receives_property_id  // Going to
+  
+  int outgoing_ha_id
+  int receiving_ha_id
+  
+  enum ha_approval_status  // "Pending", "Approved", "Denied"
+  timestamp? approved_at
+  int? approved_by
+  
+  int? match_id
+}</div>
+                </div>
+            </div>
+
+            <h3>Key Relationships</h3>
+
+            <div class="flow-diagram">
+                <h4>Data Flow</h4>
+                <div class="code-block">tenants
+  
+   active_transfer_id  transfers (ONE active transfer)
+                              
+                               match_id  transfer_matches
+                                              
+                                               (if circular)  potential_exchange_participants
+                                                                    
+                                                                     potential_exchanges
+
+tenant_property (separate history)
+   Tracks residence over time (many records per tenant)</div>
+            </div>
+
+            <div class="success-box">
+                <strong>One Transfer Record:</strong> From creation to completion, there is ONE transfer record that progresses through statuses. No duplicates!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+  <a href="index.html">Back to Client Documentation</a>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
